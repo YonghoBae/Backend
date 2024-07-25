@@ -187,58 +187,6 @@ router.get('/',async(req,res)=>{
 });
 
 /*
--기존 단일 게시글 정보 조회 요청과 응답처리 라우팅메소드
--호출주소: http://localhost:3000/api/articles/?aid=1
--호출방식: Get
--응답결과: 단일게시글 정보 JSON 반환
-*/
-router.get('/:aid',async(req,res)=>{
-
-    let apiResult = {
-        code:200,
-        data:null,
-        result:""
-    }
-
-    try{
-
-        //API URL 주소에서 게시글번호를 추출(쿼리스트링방식)
-        //파라메터 방식으로 전달되는 키값을 와일드카드로 추출가능
-        const articleIdx = req.params.aid;
-
-        //해당 게시글번호를 기준으로 DB 게시글 테이블에서 단일게시글 정보를 조회
-        //DB에서 조회해온 단일 게시글 정보라고 가정
-        const article = {
-            article_id:1,
-            title:"게시글 제목1-파라매터 방식",
-            contents:"게시글1 내용",
-            display:1,
-            view_cnt:1,
-            ip_address:"111.111.111.111",
-            regist_id:1,
-            regist_date:Date.now()
-        };
-
-        apiResult.code = 200;
-        apiResult.data = article;
-        apiResult.result = "Ok";
-
-    }catch(err){
-
-        console.log("실제 서버에러 확인하기:",err.messages);
-        //백엔드에서 에러가 난 사실을 서버에 물리적 로그폴더를 만들고 로그.txt(.log)파일에 기록하면
-        //좀 더 적극적으로 서버에러에 대한 대응이 가능
-
-        apiResult.code = 500;
-        apiResult.data = null;
-        apiResult.result = "서버에러발생, 관리자에게 문의하세요";
-    }
-
-    //단일게시글 정보를 웹브라우저/클라이언트 응답결과물로 반환
-    res.json(apiResult);
-});
-
-/*
 -기존 단일 게시글 수정 처리 요청과 응답 라우팅메소드
 -호출주소: http://localhost:3000/api/articles/modify
 -호출방식: Post
@@ -299,10 +247,10 @@ router.post('/modify',async(req,res)=>{
 /*
 -기존 단일 게시글 삭제 처리 요청과 응답 라우팅메소드
 -호출주소: http://localhost:3000/api/articles/delete?aid=1
--호출방식: Get
+-호출방식: Post
 -응답결과: 수정결과 JSON 반환
 */
-router.get('/delete',async(req,res)=>{
+router.post('/delete',async(req,res)=>{
     let apiResult = {
         code:200,
         data:null,
@@ -325,11 +273,63 @@ router.get('/delete',async(req,res)=>{
     }catch(err){
 
         apiResult.code = 500;
-        apiResult.data = null;
-        apiResult.result = "";
+        apiResult.data = 0;
+        apiResult.result = "Failed 관리자에게 문의하세요.";
 
     }
 
+    res.json(apiResult);
+});
+
+/*
+-기존 단일 게시글 정보 조회 요청과 응답처리 라우팅메소드
+-호출주소: http://localhost:3000/api/articles/?aid=1
+-호출방식: Get
+-응답결과: 단일게시글 정보 JSON 반환
+*/
+router.get('/:aid',async(req,res)=>{
+
+    let apiResult = {
+        code:200,
+        data:null,
+        result:""
+    }
+
+    try{
+
+        //API URL 주소에서 게시글번호를 추출(쿼리스트링방식)
+        //파라메터 방식으로 전달되는 키값을 와일드카드로 추출가능
+        const articleIdx = req.params.aid;
+
+        //해당 게시글번호를 기준으로 DB 게시글 테이블에서 단일게시글 정보를 조회
+        //DB에서 조회해온 단일 게시글 정보라고 가정
+        const article = {
+            article_id:1,
+            title:"게시글 제목1-파라매터 방식",
+            contents:"게시글1 내용",
+            display:1,
+            view_cnt:1,
+            ip_address:"111.111.111.111",
+            regist_id:1,
+            regist_date:Date.now()
+        };
+
+        apiResult.code = 200;
+        apiResult.data = article;
+        apiResult.result = "Ok";
+
+    }catch(err){
+
+        console.log("실제 서버에러 확인하기:",err.messages);
+        //백엔드에서 에러가 난 사실을 서버에 물리적 로그폴더를 만들고 로그.txt(.log)파일에 기록하면
+        //좀 더 적극적으로 서버에러에 대한 대응이 가능
+
+        apiResult.code = 500;
+        apiResult.data = null;
+        apiResult.result = "서버에러발생, 관리자에게 문의하세요";
+    }
+
+    //단일게시글 정보를 웹브라우저/클라이언트 응답결과물로 반환
     res.json(apiResult);
 });
 
