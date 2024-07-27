@@ -104,6 +104,11 @@ router.get('/modify/:aid',async(req,res)=>{
     res.render('article/modify',{article});
 });
 
+router.get('/delete',async(req,res)=>{
+    const articleIdx = req.query.aid;
+
+    res.redirect("/article/list")
+});
 
 
 module.exports = router;
