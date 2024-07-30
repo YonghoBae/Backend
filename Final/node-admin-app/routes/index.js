@@ -4,6 +4,8 @@ var router = express.Router();
 
 const db = require('../models/index.js');
 
+var bcrypt = require('bcryptjs');
+
 
 /* 임시메인 페이지 요청과 응답처리 라우팅 메소드 */
 router.get('/', async(req, res, next)=>{
@@ -43,7 +45,8 @@ router.post('/login', async(req, res, next)=>{
   const admin = await db.Admin.findOne({where:{admin_id}});
 
   if(admin){
-      if(admin.admin_password == admin_password){
+      //bcrypt.compare('로그인화면에서 전달된 암호',db에 저장된 암호화된 문자열) 메소드는 암호가 같으면 true반환
+      if(bcrypt.compare(admin_password,admin.admin_password)){
         //정상 로그인시 
         res.redirect('/main');
       }else{
