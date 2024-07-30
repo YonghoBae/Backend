@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();
+
 //레이아웃 노드패키지 참조
 var expressLayouts = require('express-ejs-layouts');
 var sequelize = require('./models/index.js').sequelize;

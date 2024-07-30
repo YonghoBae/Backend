@@ -6,6 +6,8 @@ var router = express.Router();
 var db = require('../models/index.js');
 
 var moment = require('moment');
+//관리자 암호를 단방향암호화(해시알고리즘)을 이용하여
+var bcrypt = require('bcryptjs');
 
 /*
 - 관리자 계정 목록 조회 웹페이지 요청과 응답처리 라우팅메소드
@@ -65,10 +67,14 @@ router.get('/create',async(req,res)=>{
 */
 router.post('/create',async(req,res)=>{
 
+    const admin_password = req.body.admin_password;
+    //hash('사용자가 입력한 암호',암호화강도);
+    //암호화강도 -> 해쉬를 몇번 돌릴건지
+    const encryptedPassword = await bcrypt.hash(admin_password,12);
 
     const admin = {
         admin_id:req.body.admin_id,
-        admin_password:req.body.admin_password,
+        admin_password:encryptedPassword,
         admin_name:req.body.admin_name,
         summary:req.body.summary,
         email:req.body.email,
@@ -92,47 +98,24 @@ router.post('/create',async(req,res)=>{
 - 기존 관리자 계정 정보 수정 처리 후 목록페이지 이동
 */
 router.post('/modify',async(req,res)=>{
-    const adminIdx = req.body.admin_id;
+    const admin_member_id = req.body.admin_member_id;
 
     const admin = {
-        admin_id:req.body.admin_id,
-        admin_password:req.body.admin_password,
         admin_name:req.body.admin_name,
-        address:req.body.address,
         summary:req.body.summary,
-        admin_email:req.body.admin_email,
+        email:req.body.email,
         company_code:req.body.company_code,
         dept_name:req.body.dept_name,
-        regist_id:1,
-        regist_date:Date.now()
+        telephone:req.body.telephone,
+        used_yn_code:req.body.used_yn_code,
+        edit_member_id:1,
+        edit_date:Date.now()
     };
+
+    const modifiedAdmin = await db.Admin.update(admin,{where:{admin_member_id}});
 
 
     res.redirect('/admin/list');
-});
-
-/*
-- 기존 관리자 계정 확인 웹페이지 요청과 응답처리 라우팅메소드
-- http://localhost:5001/admin/modify/1
-- 기존 관리자 계정 정보 확인 웹페이지 반환
-*/
-router.get('/modify/:aid',async(req,res)=>{
-    const adminIdx = req.params.aid; 
-
-    const admin = {
-        admin_id:"req.body.admin_id",
-        admin_password:"req.body.admin_pw",
-        admin_name:"req.body.admin_name",
-        address:"req.body.address",
-        summary:"req.body.summary",
-        admin_email:"req.body.admin_email",
-        company_code:"req.body.company",
-        dept_name:"req.body.department",
-        regist_id:1,
-        regist_date:Date.now()
-    };
-
-    res.render('admin/modify',{admin});
 });
 
 /*
@@ -141,8 +124,27 @@ router.get('/modify/:aid',async(req,res)=>{
 - 기존 관리자 계정 삭제 처리 후 목록페이지 이동
 */
 router.get('/delete',async(req,res)=>{
+    const admin_member_id = req.query.id;
+
+    const deletedAdmin = await db.Admin.destroy({where:{admin_member_id}});
+
     res.redirect("/admin/list")
 });
+
+
+/*
+- 기존 관리자 계정 확인 웹페이지 요청과 응답처리 라우팅메소드
+- http://localhost:5001/admin/modify/1
+- 기존 관리자 계정 정보 확인 웹페이지 반환
+*/
+router.get('/modify/:aid',async(req,res)=>{
+    const admin_member_id = req.params.aid;
+    
+    const admin = await db.Admin.findOne({where:{admin_member_id}});
+
+    res.render('admin/modify',{admin});
+});
+
 
 
 module.exports = router;

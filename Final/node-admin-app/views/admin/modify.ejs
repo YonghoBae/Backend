@@ -22,7 +22,8 @@
 <!--우측 콘텐츠 영역 -->
 <div class="wrapper wrapper-content">
 
-    <form id="createForm" action="/admin/create" method="post">
+    <form id="modifyForm" action="/admin/modify" method="post">
+        <input type="hidden" name="admin_member_id" value="<%=admin.admin_member_id%>" />
         <div class="ibox-content m-b-sm border-bottom">
             <div class="row">
                 <div class="col-sm-4">
@@ -35,7 +36,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label class="control-label">관리자아이디</label>
-                        <input type="text" class="form-control" name="admin_id" value="<%=admin.admin_id%>" />
+                        <input type="text" class="form-control" name="admin_id" value="<%=admin.admin_id%>" readonly />
                     </div>
                 </div>
 
@@ -43,7 +44,7 @@
                     <div class="form-group">
                         <label class="control-label">관리자암호</label>
                         <input type="password" class="form-control" name="admin_password"
-                            value="<%=admin.admin_password%>" />
+                            value="<%=admin.admin_password%>" readonly />
                     </div>
                 </div>
             </div>
@@ -62,9 +63,9 @@
                     <div class="form-group">
                         <label class="control-label">소속회사</label>
                         <select id="company_code" name="company_code" class="form-control">
-                            <option value="9">선택</option>
-                            <option value="1">자회사</option>
-                            <option value="0">협력사</option>
+                            <option value="9" <% if(admin.company_code=="9" ) {%>selected<%}%>>선택</option>
+                            <option value="1" <% if(admin.company_code=="1" ) {%>selected<%}%>>자회사</option>
+                            <option value="0" <% if(admin.company_code=="0" ) {%>selected<%}%>>협력사</option>
                         </select>
                     </div>
                 </div>
@@ -72,14 +73,14 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label class="control-label">부서명</label>
-                        <input type="text" class="form-control" name="dept_name" value="<%=admin.dept_name%>"/>
+                        <input type="text" class="form-control" name="dept_name" value="<%=admin.dept_name%>" />
                     </div>
                 </div>
 
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label class="control-label">메일주소</label>
-                        <input type="text" class="form-control" name="admin_email" value="<%=admin.admin_email%>"/>
+                        <input type="text" class="form-control" name="email" value="<%=admin.email%>" />
                     </div>
                 </div>
             </div>
@@ -95,17 +96,18 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label class="control-label">사용여부</label>
-                        <select id="use_yn_code" name="use_yn_code" class="form-control">
-                            <option value="9">선택</option>
-                            <option value="1">사용함</option>
-                            <option value="0">사용안함</option>
+                        <select id="used_yn_code" name="used_yn_code" class="form-control">
+                            <option value="9" <% if(admin.used_yn_code=="9" ) {%>selected<%}%>>선택</option>
+                            <option value="1" <% if(admin.used_yn_code=="1" ) {%>selected<%}%>>사용함</option>
+                            <option value="0" <% if(admin.used_yn_code=="0" ) {%>selected<%}%>>미사용</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">생성</button>
+                <button type="submit" class="btn btn-primary">수정</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">삭제</button>
                 <a href="/admin/list" class="btn btn-info">목록</a>
             </div>
         </div>
@@ -114,5 +116,9 @@
 
 
 <script>
-
+    $("#btnDelete").click(function () {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = "/admin/delete?id=<%=admin.admin_member_id%>";
+        }
+    })
 </script>
