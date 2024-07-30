@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "root",
+    "password": "mypassword",
+    "database": "admin_app",
+    "host": "localhost",
+    "dialect": "mysql",
+    "port": 33061,
+    "timezone":"+09:00"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_productaion",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
