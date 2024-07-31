@@ -4,6 +4,9 @@ var express = require('express');
 var router = express.Router();
 
 var db = require('../models/index.js');
+//동적SQL쿼리를 직접 작성해서 전달하기 위한 참조
+var sequelize = db.sequelize;
+const {QueryTypes} = sequelize;
 
 var moment = require('moment');
 //관리자 암호를 단방향암호화(해시알고리즘)을 이용하여
@@ -15,6 +18,9 @@ var bcrypt = require('bcryptjs');
 - 관리자 계정 전체 목록 조회 웹페이지 반환
 */
 router.get('/list',async(req,res)=>{
+    const company_code = req.body.company_code;
+    const admin_id = req.body.admin_id;
+    const used_yn_code = req.body.used_yn_code;
 
     const searchOption = {
         company_code:"9",
@@ -22,9 +28,39 @@ router.get('/list',async(req,res)=>{
         use_yn_code:"9"
     }
 
+    let query = `SELECT
+        admin_member_id,
+        admin_id,
+        admin_name,
+        email,
+        company_code,
+        dept_name,
+        used_yn_code,
+        reg_date
+    FROM admin_app.admin
+    WHERE used_yn_code = 1 `;
+
+    if(company_code != 9){
+        query += ` AND company_code = ${company_code} `;
+    }
+
+
+    if(admin_id > 0){
+        query += ` AND admin_id Like '%${admin_id}%' `;
+    }
+
+
+    if(used_yn_code != 9){
+        query += ` AND used_yn_code = ${used_yn_code} `;
+    }
+
+    query += `ORDER BY reg_date DESC`;
+
     //전체 관리자 계정목록 조회하기
     //ORM 내부적으로 자동생성해서 db서버에 전달/실행되고 그 결과물이 백엔드로 반환
     const admins = await db.Admin.findAll();
+
+
 
     res.render('admin/list', {admins, moment, searchOption});
 });
