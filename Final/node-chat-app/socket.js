@@ -10,7 +10,16 @@ module.exports =(server)=>{
     //서버 소켓의 입출력(In/Out) 메시지 처리 객체 io 생성
     //input 메시지는 웹브라우저에서 들어오는 메시지
     //output 메시지는 서버소켓에서 웹브라우저로 전송하는 메시지
-    const io = SocketIO(server,{path:"/socket.io"});
+    // const io = SocketIO(server,{path:"/socket.io"});
+
+    //socket.js socket.io CORS 통신설정 예시 – socket cors 이슈 발생시 사용
+    const io = SocketIO(server, {
+            path: "/socket.io",
+            cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
+        },
+    });
 
     //자바스킄립트에서 on(이벤트핸들러(처리기))
     //io객체에 connection 이벤트가 발생하면 콜백함수를 실행
