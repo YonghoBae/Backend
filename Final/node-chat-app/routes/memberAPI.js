@@ -6,11 +6,15 @@ var router = express.Router();
 //사용자 암호 단방향 암호화 적용을 위해 encryptjs 참조
 var encrypt = require('bcryptjs');
 
+//JWT 토큰 생성을 위한 jsonwebtoken 패키지 참조
+var jwt = require('jsonwebtoken');
+
 //ORM db객체 참조
 var db = require('../models/index.js');
 
 /*
 -신규 회원정보를 등록처리 요청과 응답 라우팅메소드
+-신규 회원 정보 등록처리 후 DB에 저장된 회원정보 반환
 */
 router.post('/entry',async(req,res)=>{
 
@@ -55,6 +59,66 @@ router.post('/entry',async(req,res)=>{
         apiResult.data = null;
         apiResult.msg = "Failed";        
 
+    }
+
+    res.json(apiResult);
+});
+
+/*
+-회원 로그인 데이터 처리 요청과 응답 라우팅메소드
+-사용자 메일/암호를 체크하고 JWT 사용자 인증토큰값을 프론트엔드로 반환
+*/
+router.post('/login',async(req,res)=>{
+    
+    let apiResult = {
+        code:400,
+        data:null,
+        msg:""
+    };
+
+    try{
+        const email = req.body.email;
+        const password = req.body.password;
+
+        const member = await db.Member.findOne({where:{email}});
+
+        if(member){
+            const compareResult = await encrypt.compare(password,member.member_password);
+
+            if(compareResult){
+                //사용자 메일주소/암호가 일치할 경우 현재 로그인 사용자의 주요정보를 JSON데이터화
+                const tokenJsonData = {
+                    member_id:member.member_id,
+                    email:member.email,
+                    name:member.name,
+                    profile_img_path:member.profile_img_path,
+                }
+
+                //인증된 사용자 JSON데이터를 JWT토큰내에 댐아 JWT 토큰문자열을 생성
+                //jwt.sing('토큰에 저장할 JOSN데이터',토큰화할때 사용하는 인증키값,옵션값(토큰유효기간설정,발급자));
+                const token = await jwt.sign(tokenJsonData,process.env.JWT_AUTH_KEY,{
+                    expiresIn:'24h',
+                    issuer:"BYH"
+                });
+
+                apiResult.code = 200;
+                apiResult.data = token;
+                apiResult.msg = "Ok";
+            }else{
+                apiResult.code = 400;
+                apiResult.data = null;
+                apiResult.msg = "Password is incorrect";
+            }
+        }else{
+            apiResult.code = 400;
+            apiResult.data = null;
+            apiResult.msg = "Not Exist Email";
+        }
+
+    }catch(err){
+        apiResult.code = 500;
+        apiResult.data = null;
+        apiResult.msg = "Failed";
     }
 
     res.json(apiResult);

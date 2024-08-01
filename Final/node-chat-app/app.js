@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//환경설정정보 구성
+require('dotenv').config();
+
 var sequelize = require('./models/index.js').sequelize;
 
 //RESTful API 서비스 CORS 이슈해결을 위한 cors 패키지 참조
