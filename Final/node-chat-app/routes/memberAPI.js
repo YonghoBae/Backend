@@ -30,7 +30,7 @@ router.post('/entry',async(req,res)=>{
             profile_img_path:"/img/user22.png",
             entry_type_code:0,
             use_state_code:1,
-            entry_data:Date.now()
+            entry_date:Date.now()
         };
 
         let registedMember = await db.Member.create(member);
