@@ -3,6 +3,9 @@
 var express = require('express');
 var router = express.Router();
 
+//사용자 암호 단방향 암호화 적용을 위해 encryptjs 참조
+var encrypt = require('bcryptjs');
+
 //ORM db객체 참조
 var db = require('../models/index.js');
 
@@ -23,9 +26,11 @@ router.post('/entry',async(req,res)=>{
         const password = req.body.password;
         const name = req.body.name;
 
+        const encryptedPassword = await encrypt.hash(password,12);
+
         const member  = {
             email,
-            member_password:password,
+            member_password:encryptedPassword,
             name,
             profile_img_path:"/img/user22.png",
             entry_type_code:0,
