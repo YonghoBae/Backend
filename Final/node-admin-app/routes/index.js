@@ -9,7 +9,7 @@ var bcrypt = require('bcryptjs');
 
 /* 임시메인 페이지 요청과 응답처리 라우팅 메소드 */
 router.get('/', async(req, res, next)=>{
-  res.render('index', { title: 'Express' });
+  res.redirect('/main');
 });
 
 /* 
@@ -46,9 +46,30 @@ router.post('/login', async(req, res, next)=>{
 
   if(admin){
       //bcrypt.compare('로그인화면에서 전달된 암호',db에 저장된 암호화된 문자열) 메소드는 암호가 같으면 true반환
-      if(bcrypt.compare(admin_password,admin.admin_password)){
-        //정상 로그인시 
-        res.redirect('/main');
+      if(await bcrypt.compare(admin_password,admin.admin_password)){
+
+        //서버세션에 저장할 유저의 주요 정보 설정
+        var sessionLoginData = {
+          admin_member_id:admin.admin_member_id,
+          company_code:admin.company_code,
+          admin_id:admin.admin_id,
+          admin_name:admin.admin_name
+        };
+
+        //express-session 패키지를 설치하고 app.js에 설정하면 req객체에 session속성이 추가
+        //req.session속성에 loginUser 동적속성을 정의하고 값으로
+        //현재 로그인한 사용자의 주요 데이터를 저장
+        req.session.loginUser = sessionLoginData;
+
+        //현재 사용자의 로그인 여부를 동적속성 isLogined를 정의하고 값으로 true를 설정
+        req.session.isLogind = true;  
+
+        //서버세션을 최종 저장하고 메인페이지로 이동
+        req.session.save(function(){
+          console.log('세션에 저장완료');
+          res.redirect('/main');
+        });
+
       }else{
         resultMsg.code = 402;
         resultMsg.msg = "비밀번호가 일치하지 않습니다."

@@ -6,9 +6,13 @@ var logger = require('morgan');
 
 require('dotenv').config();
 
+//
+var session = require('express-session'); 
+
 //레이아웃 노드패키지 참조
 var expressLayouts = require('express-ejs-layouts');
 var sequelize = require('./models/index.js').sequelize;
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,6 +25,21 @@ var messageRouter = require('./routes/message');
 var app = express();
 
 sequelize.sync();
+
+//백엔드 앱에서 세션을 사용할 수 있게 설정하기
+app.use(
+  session({
+    resave: false, //매번 세션 강제 저장 옵션 로그인사이다 세션값이 변경이 없어도 강제로 저장할 지 여부
+    saveUninitialized: true, //빈 세션도 저장할지 여부
+    secret: "testsecret", //세션 아이디를 만들떄 사용한 암호화 키값
+    cookie: {
+      httpOnly: true,//http 지원여부
+      secure: false,//http환경에서만 세션정보를 주고받도록 처리할지 여부
+      maxAge: 1000 * 60 * 5 //5분동안 서버세션을 유지(1000은 1초), 보틍은 20분동안 유지되게 설정
+    },
+  }),
+);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

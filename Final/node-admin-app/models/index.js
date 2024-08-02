@@ -24,6 +24,9 @@ db.Admin = require('./admin.js')(sequelize,Sequelize);
 //게시글 모델을 참조하고 db객체에 Article 동적속성을 추가합니다. 
 db.Article = require('./article.js')(sequelize,Sequelize);
 
+//게시글 첨부파일 모델 참조 및 동적속성 정의
+db.ArticleFile = require('./article_file.js')(sequelize,Sequelize);
+
 //회원모델 모듈파일 참조하고 db속성정의하기
 //db.Member = require('./member.js')(sequelize,Sequelize);
 //db객체 외부로 노출하기
