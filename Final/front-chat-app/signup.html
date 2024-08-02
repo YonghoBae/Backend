@@ -54,7 +54,8 @@
 				</div>
 				<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
 					<div class="login-wrapper">
-						<form action="index.html">
+
+						<form id="entryForm">
 							<div class="login-screen">
 								<div class="login-body">
 									<a href="index.html" class="login-logo">
@@ -62,19 +63,19 @@
 									</a>
 									<h6>Welcome to Quick Chat App,<br>Create your account.</h6>
 									<div class="field-wrapper">
-										<input type="email" autofocus>
+										<input type="email" id="email" autofocus>
 										<div class="field-placeholder">Email ID</div>
 									</div>
 									<div class="field-wrapper">
-										<input type="password">
+										<input type="password" id="password">
 										<div class="field-placeholder">Password</div>
 									</div>
 									<div class="field-wrapper mb-3">
-										<input type="password">
+										<input type="password" id="password-confirm">
 										<div class="field-placeholder">Confirm Password</div>
 									</div>
 									<div class="field-wrapper mb-3">
-										<input type="text">
+										<input type="text" id="name">
 										<div class="field-placeholder">NickName</div>
 									</div>
 									<div class="actions">
@@ -96,5 +97,55 @@
 			************ Login container end *************
 		************* -->
 
+		<script src="js/jquery.min.js"></script>
+
+		<script>
+
+			//entryForm에서 Onsubmit이벤트가 발생하면 처리할 업무로직 구현
+			$("#entryForm").submit(function(e){
+				
+				e.preventDefault();
+
+				if($("#email").val() == ""){
+					alert("이메일주소를 입력해주세요.");
+					return false;
+				}
+				if($("#password").val() == ""){
+					alert("비밀번호를 입력해주세요.");
+					return false;
+				}
+				if($("#password-confirm").val() == ""){
+					alert("비밀번호 확인값을 입력해주세요.");
+					return false;
+				}
+				if($("#password").val() != $("#password-confirm").val()){
+					alert("비밀번호를 다르게 입력했습니다.");
+					$("#password-confirm").val("");
+					$("#password-confirm").focus();
+					return false;
+				}
+				if($("#name").val() == ""){
+					alert("닉네임을 입력해주세요.");
+					return false;
+				}
+
+				//사용자 입력값을 UI요소에 추출 JSON데이터를 생성
+				var member = {
+					email:$("#email").val(),
+					password:$("#password").val(),
+					name:$("#name").val()
+				};
+
+				$.post('http://localhost:5000/api/member/entry',member).done(function(result){
+					console.log("백엔드에서의 처리결과값 확인하기:",result);
+					if(result.code == 200){
+						location.href="./login.html";
+					}else{
+						alert("회원가입에 실패했습니다.\n 관리자에게 문의하세요.");
+					}
+				});
+			});
+
+		</script>
 	</body>
 </html>

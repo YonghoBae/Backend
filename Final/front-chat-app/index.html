@@ -501,7 +501,7 @@
 											<a class="dropdown-item offline" href="#">Offline</a>
 										</div>
 									</div>
-									<h5>Jennifer Lopezx</h5>
+									<h5 id="profile-name"></h5>
 									<h6>Bern, Switzerland</h6>
 								</div>
 								<!-- User profile end -->
@@ -1270,7 +1270,7 @@
 														</div>
 														<div class="field-wrapper">
 															<div class="custom-file">
-																<input type="file" class="custom-file-input" id="uploadProfile">
+																<input type="file" class="custom-file-input" id="uploadProfile" name="file">
 																<label class="custom-file-label" for="uploadProfile">Choose file</label>
 															</div>
 														</div>
@@ -1609,7 +1609,7 @@
 									</div>
 									<div class="field-wrapper">
 										<div class="custom-file">
-											<input type="file" class="custom-file-input" id="uploadProfile">
+											<input type="file" class="custom-file-input">
 											<label class="custom-file-label" for="uploadProfile">Group image</label>
 										</div>
 									</div>
@@ -1688,7 +1688,7 @@
 									</div>
 									<div class="field-wrapper">
 										<div class="custom-file">
-											<input type="file" class="custom-file-input" id="uploadProfile">
+											<input type="file" class="custom-file-input">
 											<label class="custom-file-label" for="uploadProfile">Group image</label>
 										</div>
 									</div>
@@ -1815,6 +1815,36 @@
 
 		<script>
 
+			//웹페이지가 웹브라우저에 완전 로깅완료되는 시점에 백엔드 API를 호출해
+			//현재 로그인한 사용자의 프로필 정보를 조회
+			$(document).ready(function(){
+
+				//웹브라우저에 저장된 토큰값 추출
+				var jwtToken = localStorage.getItem('chatMemberToken');
+
+				//index.html 페이지는 반드시 로그인후 접속이 가능하며
+				//로그인을 했으면 토큰값이 웹브라우저에 스토리지에 저장되어있음
+				//체크해서 없으면 로그인 페이지로 안내
+				if(jwtToken == undefined){
+					location.href = "./login.html";
+				}
+
+				//get방식으로 API를 호출
+				$.ajax({
+					type:'Get',
+					url:'http://localhost:5000/api/member/profile',
+					headers:{ Authorization:`Bearer ${jwtToken}`},
+					dataType:"json",
+					success:function(result){
+						console.log("프로필 정보 확인",result);
+						$("#profile-name").text(result.data.name);
+					},
+					error:function(err){
+						console.log("백엔드 API 호출에러 발생....");
+					}
+				});
+			});
+
 			//현재 URL에서(/front/modify.html?id=1) 쿼리스트링 키명으로 값을 추출하는 클라이언트 자바스크립트 함수 
 			//정규식 문법을 이용한 키값추출하기 
 			function getQueryString(keyName){
@@ -1896,8 +1926,39 @@
 			});
 	
 	
-	
-	
+			//파일 첨부 태그의 change이벤트가 발생하면 파일을 서버로 전송한다.
+			$("#uploadProfile").change(function(e){
+
+				//폼태그를 프로그래밍적으로 구현하는 FormData객체를 생성한다.
+				var data = new FormData();
+				data.append('file',$("input[name=file]")[0].files[0]);
+
+				console.log("프론트엔드에서 전송하는 파일데이터:",data);
+
+				e.preventDefault();
+
+				//백엔드 RESTAPI주소로 파일 데이터를 전송하고 반환받습니다.
+				$.ajax({
+					data:data,
+					type:'POST',
+					url:'http://localhost:5000/api/member/profile/upload',
+					cache:false,
+					contentType:false,
+					processData:false,
+					success:function(result){
+						console.log("파일전송결과:",result);
+					},
+					error:function(err){
+						console.error("파일전송에러발생:",err);
+					}
+				});
+
+				return false;
+			});
+
+			$("#logout").click(function(){
+				localStorage.removeItem("chatMemberToken");
+			});
 		</script>
 	
 	
