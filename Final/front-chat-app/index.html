@@ -1832,7 +1832,7 @@
 				//get방식으로 API를 호출
 				$.ajax({
 					type:'Get',
-					url:'http://localhost:5000/api/member/profile',
+					url:'http://43.202.92.112/api/member/profile',
 					headers:{ Authorization:`Bearer ${jwtToken}`},
 					dataType:"json",
 					success:function(result){
@@ -1865,7 +1865,7 @@
 			//서버소켓과 연결을 시도하고 연결이 완료되면 연결이 지속된다.
 			//io.connect('/')를 통해 서버소켓과 연결을 완료하고
 			//서버로 메시지를 보낼 socket객체가 반환됩니다.
-			var socket = io.connect('http://localhost:5000/');
+			var socket = io.connect('http://43.202.92.112/');
 	
 			//jquery에서 html요소의 id값으로 html요소를 찾는다 $("#html요소의id값")
 			//전송버튼이 클릭되면 서버로 사용자 메시지를 전송한다.
@@ -1941,7 +1941,7 @@
 				$.ajax({
 					data:data,
 					type:'POST',
-					url:'http://localhost:5000/api/member/profile/upload',
+					url:'http://43.202.92.112/api/member/profile/upload',
 					cache:false,
 					contentType:false,
 					processData:false,

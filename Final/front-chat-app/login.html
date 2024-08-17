@@ -114,7 +114,7 @@
 					password:$("#password").val(),
 				};
 
-				$.post('http://localhost:5000/api/member/login',member).done(function(result){
+				$.post('http://43.202.92.112/api/member/login',member).done(function(result){
 					console.log("백엔드에서의 처리결과값 확인하기:",result);
 					if(result.code == 200){
 						//백엔드에서 제공해준 JWT토큰값 웹브라우저 로컬스토리지 공간에 저장

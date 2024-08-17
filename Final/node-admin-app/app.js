@@ -3,11 +3,29 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const redis = require('redis');
 
 require('dotenv').config();
 
 //
 var session = require('express-session'); 
+let RedisStore = require('connect-redis')(session);
+
+let redisClient = redis.createClient({
+  host: "redis-12829.c340.ap-northeast-2-1.ec2.redns.redis-cloud.com",
+  port: 12829,
+  db: 0,
+  password: "GW3sSZv14ScSprMUiMH2imGBQtpwmcYa",
+});
+  
+// Add error handling for Redis client
+redisClient.on('error', function (err) {
+  console.error('Could not connect to Redis', err);
+});
+
+redisClient.on('connect', function () {
+  console.log('Connected to Redis');
+});
 
 //레이아웃 노드패키지 참조
 var expressLayouts = require('express-ejs-layouts');
@@ -30,13 +48,16 @@ sequelize.sync();
 app.use(
   session({
     resave: false, //매번 세션 강제 저장 옵션 로그인사이다 세션값이 변경이 없어도 강제로 저장할 지 여부
-    saveUninitialized: true, //빈 세션도 저장할지 여부
+    saveUninitialized: false, //빈 세션도 저장할지 여부
     secret: "testsecret", //세션 아이디를 만들떄 사용한 암호화 키값
     cookie: {
       httpOnly: true,//http 지원여부
       secure: false,//http환경에서만 세션정보를 주고받도록 처리할지 여부
       maxAge: 1000 * 60 * 5 //5분동안 서버세션을 유지(1000은 1초), 보틍은 20분동안 유지되게 설정
     },
+    ttl: 250,
+    token: "testsecret",
+    store: new RedisStore({ client: redisClient })
   }),
 );
 
@@ -81,5 +102,12 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// //노드앱의 기본 WAS 서비스 포트
+// app.set("port", process.env.PORT || 5001);
+
+// //노드앱이 작동되는 서버 객체 생성
+// var server = app.listen(app.get("port"), function () {});
+
 
 module.exports = app;

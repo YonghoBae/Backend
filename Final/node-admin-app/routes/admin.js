@@ -20,7 +20,8 @@ const {isLoggined} = require('./sessionMiddleware.js');
 - http://localhost:5001/admin/list
 - 관리자 계정 전체 목록 조회 웹페이지 반환
 */
-router.get('/list', isLoggined, async(req,res)=>{
+router.get('/list', async(req,res)=>{
+    console.log(req.session.isLoggined);
     const company_code = req.body.company_code;
     const admin_id = req.body.admin_id;
     const used_yn_code = req.body.used_yn_code;

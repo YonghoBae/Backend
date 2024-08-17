@@ -5,25 +5,23 @@
     "database": "admin_app",
     "host": "localhost",
     "dialect": "mysql",
-    "port": 33061,
+    "port":"33061",
     "timezone":"+09:00"
   },
   "test": {
     "username": "root",
-    "password": "mypassword",
+    "password": "as060131",
     "database": "admin_app",
-    "host": "localhost",
+    "host": "175.45.205.172",
     "dialect": "mysql",
-    "port": 33061,
     "timezone":"+09:00"
   },
   "production": {
     "username": "root",
-    "password": "mypassword",
+    "password": "as060131",
     "database": "admin_app",
-    "host": "localhost",
+    "host": "175.45.205.172",
     "dialect": "mysql",
-    "port": 33061,
     "timezone":"+09:00"
   }
 }

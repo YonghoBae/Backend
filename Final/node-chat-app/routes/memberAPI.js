@@ -45,6 +45,15 @@ router.post('/entry',async(req,res)=>{
         const password = req.body.password;
         const name = req.body.name;
 
+        const existMember = await db.Member.findOne({where:{email}});
+
+        if(existMember){
+            apiResult.code = 400;
+            apiResult.data = null;
+            apiResult.msg = "ExistMember";
+            return res.json(apiResult);
+        }
+
         const encryptedPassword = await encrypt.hash(password,12);
 
         const member  = {

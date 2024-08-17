@@ -136,7 +136,7 @@
 					name:$("#name").val()
 				};
 
-				$.post('http://localhost:5000/api/member/entry',member).done(function(result){
+				$.post('http://43.202.92.112/api/member/entry',member).done(function(result){
 					console.log("백엔드에서의 처리결과값 확인하기:",result);
 					if(result.code == 200){
 						location.href="./login.html";

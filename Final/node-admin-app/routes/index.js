@@ -66,7 +66,7 @@ router.post('/login', async(req, res, next)=>{
 
         //서버세션을 최종 저장하고 메인페이지로 이동
         req.session.save(function(){
-          console.log('세션에 저장완료');
+          console.log('세션에 저장완료',req.session.isLogind);
           res.redirect('/main');
         });
 
