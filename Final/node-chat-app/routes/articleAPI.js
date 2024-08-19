@@ -1,5 +1,5 @@
-express = require("express");
-router = express.Router();
+const express = require("express");
+const router = express.Router();
 
 const db = require("../models/index");
 
@@ -11,7 +11,7 @@ router.get("/list", async (req, res) => {
   };
 
   try {
-    const articleList = await db.Artilce.findAll();
+    const articleList = await db.Article.findAll();
     apiResult.code = 200;
     apiResult.data = articleList;
     apiResult.msg = "Ok";
@@ -20,6 +20,66 @@ router.get("/list", async (req, res) => {
     apiResult.data = null;
     apiResult.msg = "관리자에 문의하세요";
   }
+
+  res.json(apiResult);
+});
+
+router.post("/create", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+
+  try {
+    const article = {
+      board_type_code: 2,
+      title: req.body.title,
+      article_type_code: 0,
+      contents: req.body.contents,
+      view_count: 0,
+      ip_address: req.headers["x-forwarded-for"] || req.connection.remoteAddress, //로컬 개발환경인 경우 ::1 이렇게 ip주소가 추출됨,
+      is_display_code: req.body.display,
+      reg_date: Date.now(),
+      reg_member_id: 1,
+    };
+
+    const registedArticle = await db.Article.create(article);
+
+    apiResult.code = 200;
+    apiResult.data = registedArticle;
+    apiResult.msg = "Ok";
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "Failed";
+  }
+
+  res.json(apiResult);
+});
+
+router.get("/delelte", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+
+  try {
+  } catch (err) {}
+
+  res.json(apiResult);
+});
+
+router.post("/modify/:id", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+
+  try {
+  } catch (err) {}
 
   res.json(apiResult);
 });

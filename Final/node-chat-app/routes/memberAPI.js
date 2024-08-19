@@ -131,12 +131,12 @@ router.post('/login',async(req,res)=>{
             }else{
                 apiResult.code = 402;
                 apiResult.data = null;
-                apiResult.msg = "Password is incorrect";
+                apiResult.msg = "InCorrectPassword";
             }
         }else{
             apiResult.code = 401;
             apiResult.data = null;
-            apiResult.msg = "Not Exist Email";
+            apiResult.msg = "NotExistEmail";
         }
 
     }catch(err){
