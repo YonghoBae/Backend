@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>템플릿 문자열 문법실습</h1>
+
+    <script>
+        const name = "배용호";
+        const age = 24;
+        let local = "충청북도 청주시";
+
+        //전통적인 방식의 문장열과 변수값의 조합방식
+        //가독성이 떨어지고 코딩하는데 정신이 없다.
+
+        let introduction = "저를 소개합니다. 이름은 " + name + "이고 나이는 " + age + " 살이고 사는곳은 " + local + "입니다.";
+        introduction += "추가메시지2" + name;
+        introduction += "추가메시지2";
+
+        console.log("전통적인 문자열과 변수의 조합:", introduction);
+
+        //ECMAScript 2015에서 추가된 신규문법 템플릿 문자열 방식으로 변수와 문자열을 조합해보자.
+        //템플릿 문자열은 벡틱문자열(역홑따옴표)
+        let introduction2 = `저를 소개합니다. 이름은 ${name}이고 나이는 ${age}살이고 사는곳은 ${local}입니다.`;
+
+        console.log("템플릿문자열을 통한 문자열과 변수의 조합", introduction2);
+    </script>
+</body>
+</html>

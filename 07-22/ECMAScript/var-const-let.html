@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ECMAScript-신규변수사용법(const/let)</h1>
+
+    <script>
+        //var은 전통적인(올드한) 변수선언 예약어
+        var userName='배용호';
+        var age = 24;
+
+        //기본상품 가격
+        var price = 5000;
+        var isMale = true;
+        
+        //기본배송비 설정
+        //비지니스규칙 : 기본배송비는 한번 값이 할당되면 변경이 안되어야한다.(상수)
+        var baseDelyFee = 3000;
+        console.log("기본배송비: var:",baseDelyFee);
+
+        baseDelyFee = 5000;
+        //console은 웹브라우저 개발자도구내 콘솔탭에 로그를 찍는 기능
+        console.log("기본배송비: var:",baseDelyFee);
+
+        //var로 선언된 변수는 상수개념이 없어서 언제든지 값 변경 가능
+        //그래서 2015년도(ES6-ES2015 신규자바스크립트 문법) 상수 개념도입(const 상수도입됨...)
+
+        //const 상수를 이용해 값 할당
+        const newBaseDelyFee = 3000;
+
+        //const 정의된 상수는 한번 값아 할당되면 변경이 불가하고 변경 시 에러 발생
+        // newBaseDelyFee = 5000;
+
+        //총결제금액
+        let totalPayPrice = 0;
+
+        console.log("최초 결제비용:",totalPayPrice);
+
+        //총결제비용에 기본배송비 추가
+        totalPayPrice += newBaseDelyFee;
+
+        //총결제 비용에 기본상품가격 추가
+        totalPayPrice = totalPayPrice + price;
+
+        console.log("현재 총결제비용",totalPayPrice);
+
+        //var와 let/const와의 큰차이는 블록스코프를 준수
+        //블록스코프는 if/for구문 블럭내에서 변수/상수가 선언되며 그안에서만 사용되어야 함
+        //var는 밖에서도 사용이 가능한 문제점을 개선하는 방법
+
+        const region = '제주도';
+        if(region == '제주도'){        }
+    </script>
+</body>
+</html>
